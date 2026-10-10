@@ -1,0 +1,1 @@
+{"sql": "SELECT * FROM items WHERE category=?", "parameters": ["synthetic"]}

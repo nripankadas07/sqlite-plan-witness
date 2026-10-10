@@ -1,0 +1,18 @@
+[build-system]
+requires = ["setuptools>=77", "wheel"]
+build-backend = "setuptools.build_meta"
+[project]
+name = "sqlite-plan-witness"
+version = "0.1.0"
+description = "Open an existing SQLite file with mode=ro, authorize read-only SELECT planning, bind parameters, capture EXPLAIN QUERY PLAN nodes, and report scan/search/covering/temp-tree signals without executing the query."
+requires-python = ">=3.10"
+license = "MIT"
+readme = "README.md"
+authors = [{name = "Nripanka Das"}]
+[project.scripts]
+sqlite-plan-witness = "sqlite_plan_witness:main"
+[project.urls]
+Source = "https://github.com/nripankadas07/sqlite-plan-witness"
+Issues = "https://github.com/nripankadas07/sqlite-plan-witness/issues"
+[tool.setuptools]
+py-modules = ["sqlite_plan_witness"]

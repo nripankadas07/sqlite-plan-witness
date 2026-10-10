@@ -1,0 +1,20 @@
+[
+  {
+    "args": [
+      "sample.db",
+      "query.json"
+    ],
+    "exit": 0,
+    "expect": {
+      "executed_query": false,
+      "scan_count": 1
+    }
+  },
+  {
+    "args": [
+      "sample.db",
+      "write-query.json"
+    ],
+    "exit": 2
+  }
+]
