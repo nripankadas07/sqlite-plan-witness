@@ -13,7 +13,12 @@ def witness(path,request):
     allowed={sqlite3.SQLITE_SELECT,sqlite3.SQLITE_READ,sqlite3.SQLITE_FUNCTION,sqlite3.SQLITE_RECURSIVE}
     conn.set_authorizer(lambda code,*args:sqlite3.SQLITE_OK if code in allowed else sqlite3.SQLITE_DENY)
     try:
-        rows=conn.execute("EXPLAIN QUERY PLAN "+sql,params).fetchall()
+        try:
+            rows=conn.execute("EXPLAIN QUERY PLAN "+sql,params).fetchall()
+        except sqlite3.Warning as e:
+            # Python 3.10 raises Warning for multiple statements; normalize the
+            # rejected input to the same database-error contract as newer Python.
+            raise sqlite3.DatabaseError(str(e)) from e
         if not rows:raise ValueError("no SELECT query plan")
         nodes=[{"id":r[0],"parent":r[1],"detail":r[3],"scan":r[3].startswith("SCAN "),"search":r[3].startswith("SEARCH "),"temporary_btree":"USE TEMP B-TREE" in r[3],"covering":"COVERING INDEX" in r[3]} for r in rows]
         return {"sqlite_version":sqlite3.sqlite_version,"executed_query":False,"nodes":nodes,"scan_count":sum(n["scan"] for n in nodes),"search_count":sum(n["search"] for n in nodes),"temporary_btree_count":sum(n["temporary_btree"] for n in nodes)}
